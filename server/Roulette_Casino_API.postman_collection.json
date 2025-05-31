@@ -1,0 +1,158 @@
+{
+	"info": {
+		"_postman_id": "a1b2c3d4-e5f6-7890",
+		"name": "Roulette Casino API",
+		"description": "API collection for the Roulette Casino application - Phase 1",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Register User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Test User\",\n    \"email\": \"test@example.com\",\n    \"password\": \"password123\",\n    \"deviceId\": \"device123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/register",
+							"host": ["{{base_url}}"],
+							"path": ["auth", "register"]
+						},
+						"description": "Register a new user with name, email, password, and deviceId\n\nExpected Response (201):\n{\n    \"token\": \"jwt_token_here\",\n    \"user\": {\n        \"id\": \"user_id\",\n        \"name\": \"Test User\",\n        \"email\": \"test@example.com\",\n        \"wallet\": 1000,\n        \"role\": \"player\"\n    }\n}"
+					}
+				},
+				{
+					"name": "Login User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"test@example.com\",\n    \"password\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/login",
+							"host": ["{{base_url}}"],
+							"path": ["auth", "login"]
+						},
+						"description": "Login with email and password to get JWT token\n\nExpected Response (200):\n{\n    \"token\": \"jwt_token_here\",\n    \"user\": {\n        \"id\": \"user_id\",\n        \"name\": \"Test User\",\n        \"email\": \"test@example.com\",\n        \"wallet\": 1000,\n        \"role\": \"player\"\n    }\n}"
+					}
+				}
+			]
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Get Current User",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/user/me",
+							"host": ["{{base_url}}"],
+							"path": ["user", "me"]
+						},
+						"description": "Get current user information (requires JWT token)\n\nExpected Response (200):\n{\n    \"id\": \"user_id\",\n    \"name\": \"Test User\",\n    \"email\": \"test@example.com\",\n    \"wallet\": 1000,\n    \"role\": \"player\",\n    \"deviceId\": \"device123\",\n    \"createdAt\": \"2024-01-01T00:00:00.000Z\"\n}"
+					}
+				}
+			]
+		},
+		{
+			"name": "Tables",
+			"item": [
+				{
+					"name": "Get All Tables",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/tables",
+							"host": ["{{base_url}}"],
+							"path": ["tables"]
+						},
+						"description": "Get all available roulette tables (requires JWT token)\n\nExpected Response (200):\n[\n    {\n        \"id\": \"table_id_1\",\n        \"name\": \"Table 1\",\n        \"status\": \"waiting\",\n        \"minBet\": 10,\n        \"maxBet\": 1000,\n        \"players\": [],\n        \"createdAt\": \"2024-01-01T00:00:00.000Z\"\n    },\n    {\n        \"id\": \"table_id_2\",\n        \"name\": \"Table 2\",\n        \"status\": \"waiting\",\n        \"minBet\": 50,\n        \"maxBet\": 5000,\n        \"players\": [],\n        \"createdAt\": \"2024-01-01T00:00:00.000Z\"\n    }\n]"
+					}
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [""]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// Test for successful response",
+					"pm.test(\"Status code is 200 or 201\", function () {",
+					"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+					"});",
+					"",
+					"// Test for JSON response",
+					"pm.test(\"Response is JSON\", function () {",
+					"    pm.response.to.have.header(\"Content-Type\", \"application/json\");",
+					"});",
+					"",
+					"// For auth endpoints, test token presence",
+					"if (pm.request.url.toString().includes('/auth/')) {",
+					"    pm.test(\"Response contains token\", function () {",
+					"        var jsonData = pm.response.json();",
+					"        pm.expect(jsonData.token).to.exist;",
+					"    });",
+					"}",
+					"",
+					"// For protected endpoints, test authorization",
+					"if (!pm.request.url.toString().includes('/auth/')) {",
+					"    pm.test(\"Authorization header exists\", function () {",
+					"        pm.expect(pm.request.headers.has(\"Authorization\")).to.be.true;",
+					"    });",
+					"}"
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:5000",
+			"type": "string"
+		},
+		{
+			"key": "jwt_token",
+			"value": "your-jwt-token-here",
+			"type": "string"
+		}
+	]
+} 
