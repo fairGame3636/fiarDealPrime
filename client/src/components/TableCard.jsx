@@ -6,9 +6,9 @@ const TableCard = ({ table }) => {
   const encodedTableName = encodeURIComponent(table.name);
   
   return (
-    <div className="bg-primary rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow">
-      <h3 className="text-xl font-bold text-white mb-2">{table.name}</h3>
-      <div className="space-y-2 text-gray-300">
+    <div className="bg-gray-100 rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow">
+      <h3 className="text-xl font-bold text-gray-800 mb-2">{table.name}</h3>
+      <div className="space-y-2 text-gray-700">
         <p>Min Bet: ₹{table.minBet}</p>
         <p>Max Bet: ₹{table.maxBet}</p>
         <p className="flex items-center">
