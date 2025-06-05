@@ -1,7 +1,15 @@
 import axios from 'axios';
 
-const baseURL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
-console.log('API URL:', baseURL); // Debug log
+// Determine if we're in production or development
+const isProduction = window.location.hostname !== 'localhost';
+
+// Set the base URL based on environment
+const baseURL = isProduction 
+  ? 'https://fiardealprime.onrender.com'  // Production URL
+  : 'http://localhost:5000';              // Development URL
+
+console.log('Environment:', isProduction ? 'Production' : 'Development');
+console.log('API URL:', baseURL);
 
 const axiosClient = axios.create({
   baseURL,
@@ -10,9 +18,10 @@ const axiosClient = axios.create({
   },
 });
 
-// Request interceptor
+// Add request interceptor for debugging
 axiosClient.interceptors.request.use(
   (config) => {
+    console.log('Making request to:', config.url);
     const token = localStorage.getItem('token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
@@ -20,6 +29,7 @@ axiosClient.interceptors.request.use(
     return config;
   },
   (error) => {
+    console.error('Request error:', error);
     return Promise.reject(error);
   }
 );
@@ -28,6 +38,7 @@ axiosClient.interceptors.request.use(
 axiosClient.interceptors.response.use(
   (response) => response,
   (error) => {
+    console.error('Response error:', error);
     if (error.response?.status === 401) {
       localStorage.removeItem('token');
       window.location.href = '/';

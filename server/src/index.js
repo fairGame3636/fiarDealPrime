@@ -26,9 +26,11 @@ app.use(cors({
     if (!origin) return callback(null, true);
     
     if (allowedOrigins.indexOf(origin) === -1) {
+      console.log('Blocked by CORS:', origin); // Debug log
       const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
       return callback(new Error(msg), false);
     }
+    console.log('Allowed by CORS:', origin); // Debug log
     return callback(null, true);
   },
   credentials: true,
