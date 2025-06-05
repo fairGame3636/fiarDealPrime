@@ -15,7 +15,7 @@ const LoginPage = () => {
     e.preventDefault();
     const success = await login(formData.email, formData.password);
     if (success) {
-      navigate('/');
+      navigate('/dashboard');
     }
   };
 

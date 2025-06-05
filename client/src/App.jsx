@@ -10,9 +10,9 @@ function App() {
   return (
     <div className="min-h-screen">
       <Routes>
-        <Route path="/login" element={<LoginPage />} />
+        <Route path="/" element={<LoginPage />} />
         <Route
-          path="/"
+          path="/dashboard"
           element={
             <ProtectedRoute>
               <Navbar />

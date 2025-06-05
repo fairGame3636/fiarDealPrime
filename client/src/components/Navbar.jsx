@@ -42,7 +42,7 @@ const Navbar = () => {
             ) : (
               // This case should ideally not be reached if Navbar is inside ProtectedRoute
               <Link
-                to="/login"
+                to="/"
                 className="text-white hover:text-yellow-400"
               >
                 Login
@@ -81,7 +81,7 @@ const Navbar = () => {
             </>
           ) : (
             <Link
-              to="/login"
+              to="/"
               className="text-white block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-600"
               onClick={toggleMobileMenu}
             >
